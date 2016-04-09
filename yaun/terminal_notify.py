@@ -1,7 +1,7 @@
 import feedparser
 import pync
 
-SITES = ["http://luckovich.blog.ajc.com/"]
+SITES = {"Mike Luckovich": "http://luckovich.blog.ajc.com/"}
 
 
 def get_and_parse(url):
@@ -39,12 +39,32 @@ def check_for_new_update(url, old_update_url):
     return new_updates
 
 
-def push_update(site_name, url):
-    pync.Notifier.notify(site_name, title="Yaun", open=url)
+def push_update_single(message, url):
+    """
+    Handles actual terminal notification
+    """
+    pync.Notifier.notify(message, title="Yaun", open=url)
+
+
+def push_updates(site_update_dict):
+    for site, updates in site_update_dict.iteritems():
+        if len(updates) == 0:
+            continue
+
+        if len(updates) == 1:
+            message = site + " updated!"
+        else:
+            message = "%s has %d new updates!" % (site, len(updates))
+        push_update_single(message, updates[0])  # url of most recent
 
 
 class Feed(object):
-    def check_and_push():
+    def __init__(self):
+        # most recent
+        # sites
+        pass
+
+    def check_and_push(self):
         # check : check
         # mutate : pending
         # push : check

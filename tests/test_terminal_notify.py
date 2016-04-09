@@ -63,13 +63,50 @@ def test_check_for_new_update(get_and_parse_mock):
 
 
 @mock.patch("terminal_notify.pync")
-def test_push_update(pync_mock):
-    terminal_notify.push_update("Mike Luckovich", "http://ajc.com/foo")
+def test_push_update_single(pync_mock):
+    terminal_notify.push_update_single("Mike Luckovich updated!",
+                                       "http://ajc.com/foo")
     pync_mock.Notifier.notify.assert_called_with(
-        "Mike Luckovich", title="Yaun", open="http://ajc.com/foo")
+        "Mike Luckovich updated!", title="Yaun", open="http://ajc.com/foo")
 
 
+@mock.patch("terminal_notify.push_update_single")
+def test_push_updates(update_mock):
+    update_dict = {"xkcd": ["xkcd.com/1"],
+                   "SMBC": ["smbc.com/2", "smbc.com/1"],
+                   "Dominic Deegan": []}  # :(
+    terminal_notify.push_updates(update_dict)
 
+    # test that it doesn't push update for []
+    nt.assert_equal(len(update_mock.call_args_list), 2)
+
+    # test both orders because unordered dict
+    if "xkcd" in update_mock.call_args_list[0][0][0]:
+        nt.assert_equal(update_mock.call_args_list[0][0],
+                        ("xkcd updated!", "xkcd.com/1"))
+        nt.assert_equal(update_mock.call_args_list[1][0],
+                        ("SMBC has 2 new updates!", "smbc.com/2"))
+
+    elif "SMBC" in update_mock.call_args_list[0][0][0]:
+        nt.assert_equal(update_mock.call_args_list[0][0],
+                        ("SMBC has 2 new updates!", "smbc.com/2"))
+        nt.assert_equal(update_mock.call_args_list[1][0],
+                        ("xkcd updated!", "xkcd.com/1"))
+
+    else:
+        raise AssertionError("first call not recognized: " +
+                             str(update_mock.call_args_list[0][0]))
+
+def test_Feed_init():
+    feed = terminal_notify.Feed({"Foo": "bar.com", "xkcd": "xkcd.com"},
+                                {"Foo": "bar.com/1", "xkcd": "xkcd.com/2"})
+    # assert saved correctly (or not)
+
+
+@mock.patch.multiple("terminal_notify", check_for_new_update=mock.DEFAULT,
+                     push_updates=mock.DEFAULT)
+def test_check_and_push(check_for_new_update, push_updates):
+    pass
 
 
 
