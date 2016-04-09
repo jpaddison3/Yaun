@@ -37,10 +37,9 @@ def test_get_most_recent_update_link():
 
 @mock.patch("terminal_notify.get_and_parse")
 def test_check_for_new_update(get_and_parse_mock):
-
-    # it returns empty list on no update
+    # --- it returns empty list on no update
     m = mock.Mock()
-    # maybe return value should be example url TODO
+    # return value should be parsed example url TODO
     get_and_parse_mock.return_value = {
         "entries": [
             {"link": "bar"}
@@ -50,7 +49,7 @@ def test_check_for_new_update(get_and_parse_mock):
     truth = []
     nt.assert_equal(result, truth)
 
-    # it returns all newer links on update
+    # --- it returns all newer links on update
     get_and_parse_mock.return_value = {
         "entries": [
             {"link": "ar"},
@@ -61,6 +60,14 @@ def test_check_for_new_update(get_and_parse_mock):
     result = terminal_notify.check_for_new_update("foo", "bar")
     truth = ["ar", "aar"]
     nt.assert_equal(result, truth)
+
+
+@mock.patch("terminal_notify.pync")
+def test_push_update(pync_mock):
+    terminal_notify.push_update("Mike Luckovich", "http://ajc.com/foo")
+    pync_mock.Notifier.notify.assert_called_with(
+        "Mike Luckovich", title="Yaun", open="http://ajc.com/foo")
+
 
 
 

@@ -1,4 +1,5 @@
 import feedparser
+import pync
 
 SITES = ["http://luckovich.blog.ajc.com/"]
 
@@ -23,6 +24,8 @@ def get_most_recent_update_link(parsed_feed):
 def check_for_new_update(url, old_update_url):
     """
     Gets all new updates since old_update_url
+
+    returns: new updates in list, sorted newest to oldest
     """
     parsed_feed = get_and_parse(url)
     if get_most_recent_update_link(parsed_feed) == old_update_url:
@@ -34,5 +37,19 @@ def check_for_new_update(url, old_update_url):
             break
         new_updates.append(entry["link"])
     return new_updates
+
+
+def push_update(site_name, url):
+    pync.Notifier.notify(site_name, title="Yaun", open=url)
+
+
+class Feed(object):
+    def check_and_push():
+        # check : check
+        # mutate : pending
+        # push : check
+        pass
+
+
 
 
