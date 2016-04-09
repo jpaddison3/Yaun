@@ -1,4 +1,13 @@
+import feedparser
+
 SITES = ["http://luckovich.blog.ajc.com/"]
+
+
+def get_and_parse(url):
+    """
+    This wrapper to feedparser is a good single exit point in my code
+    """
+    return feedparser.parse(url)
 
 
 def get_most_recent_update_link(parsed_feed):
@@ -7,4 +16,23 @@ def get_most_recent_update_link(parsed_feed):
 
     WARNING, ASSUMES SORTED FEED TODO
     """
+    # maybe getting updates should be a function?
     return parsed_feed["entries"][0]["link"]
+
+
+def check_for_new_update(url, old_update_url):
+    """
+    Gets all new updates since old_update_url
+    """
+    parsed_feed = get_and_parse(url)
+    if get_most_recent_update_link(parsed_feed) == old_update_url:
+        return []
+    new_updates = []
+    # maybe getting updates should be a function?
+    for entry in parsed_feed["entries"]:
+        if entry["link"] == old_update_url:
+            break
+        new_updates.append(entry["link"])
+    return new_updates
+
+
