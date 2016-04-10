@@ -2,6 +2,7 @@ import nose.tools as nt
 import os
 import feedparser
 import mock
+import copy
 import sys
 sys.path.append("yaun")
 import terminal_notify
@@ -36,7 +37,7 @@ def test_get_most_recent_update_link():
 
 
 @mock.patch("terminal_notify.get_and_parse")
-def test_check_for_update_single(get_and_parse_mock):
+def test_check_update_single(get_and_parse_mock):
     # --- it returns empty list on no update
     m = mock.Mock()
     # return value should be parsed example url TODO
@@ -45,7 +46,7 @@ def test_check_for_update_single(get_and_parse_mock):
             {"link": "bar"}
         ]
     }
-    result = terminal_notify.check_for_update_single("foo", "bar")
+    result = terminal_notify.check_update_single("foo", "bar")
     truth = []
     nt.assert_equal(result, truth)
 
@@ -57,17 +58,17 @@ def test_check_for_update_single(get_and_parse_mock):
             {"link": "bar"}
         ]
     }
-    result = terminal_notify.check_for_update_single("foo", "bar")
+    result = terminal_notify.check_update_single("foo", "bar")
     truth = ["ar", "aar"]
     nt.assert_equal(result, truth)
 
 
-@mock.patch("terminal_notify.check_for_update_single")
-def test_check_for_updates(check_mock):
+@mock.patch("terminal_notify.check_update_single")
+def test_check_updates(check_mock):
     sites_dict = {"xkcd": "xkcd.com/feed"}
     most_recent_dict = {"xkcd": "xkcd.com/1"}
     check_mock.return_value = ["xkcd.com/2"]
-    result = terminal_notify.check_for_updates(sites_dict, most_recent_dict)
+    result = terminal_notify.check_updates(sites_dict, most_recent_dict)
     check_mock.assert_called_with("xkcd.com/feed", "xkcd.com/1")
     truth = {"xkcd": ["xkcd.com/2"]}
     nt.assert_equal(result, truth)
@@ -108,17 +109,24 @@ def test_push_updates(push_mock):
         raise AssertionError("first call not recognized: " +
                              str(push_mock.call_args_list[0][0]))
 
-def test_Feed_init():
-    feed = terminal_notify.Feed({"Foo": "bar.com", "xkcd": "xkcd.com"},
+
+def test_set_most_recent():
+    feed = terminal_notify.Feed({"Foo": "bar.com", "xkcd": "xkcd.com/feed"},
                                 {"Foo": "bar.com/1", "xkcd": "xkcd.com/2"})
-    # assert saved correctly (or not)
+    updates_dict = {"Foo": [], "xkcd": ["xkcd.com/3"]}
+    feed.set_most_recent(updates_dict)
+    truth = {"Foo": "bar.com/1", "xkcd": "xkcd.com/3"}
+    nt.assert_equal(feed.most_recent_dict, truth)
 
 
-@mock.patch.multiple("terminal_notify", check_for_new_update=mock.DEFAULT,
+@mock.patch.multiple("terminal_notify", check_updates=mock.DEFAULT,
                      push_updates=mock.DEFAULT)
-def test_check_and_push(check_for_new_update, push_updates):
-    pass
-
-
-
-
+def test_check_and_push(check_updates, push_updates):
+    feed = terminal_notify.Feed({"Foo": "bar.com", "xkcd": "xkcd.com/feed"},
+                                {"Foo": "bar.com/1", "xkcd": "xkcd.com/2"})
+    updates_dict = {"Foo": [], "xkcd": ["xkcd.com/3"]}
+    check_updates.return_value = copy.deepcopy(updates_dict)
+    feed.check_and_push()
+    push_updates.assert_called_with(updates_dict)
+    new_recent_truth = {"Foo": "bar.com/1", "xkcd": "xkcd.com/3"}
+    nt.assert_equal(feed.most_recent_dict, new_recent_truth)

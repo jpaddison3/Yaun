@@ -21,7 +21,7 @@ def get_most_recent_update_link(parsed_feed):
     return parsed_feed["entries"][0]["link"]
 
 
-def check_for_update_single(url, most_recent_url):
+def check_update_single(url, most_recent_url):
     """
     Gets all new updates since most_recent_url
 
@@ -39,14 +39,14 @@ def check_for_update_single(url, most_recent_url):
     return new_updates
 
 
-def check_for_updates(sites_dict, most_recent_dict):
+def check_updates(sites_dict, most_recent_dict):
     """
     Checks for updates from all sites
     """
     update_dict = {}
     for site, feed_url in sites_dict.iteritems():
         recent_url = most_recent_dict[site]
-        update_dict[site] = check_for_update_single(feed_url, recent_url)
+        update_dict[site] = check_update_single(feed_url, recent_url)
     return update_dict
 
 
@@ -73,17 +73,18 @@ def push_updates(site_update_dict):
 
 
 class Feed(object):
-    def __init__(self):
-        # most recent
-        # sites
-        pass
+    def __init__(self, sites_dict, most_recent_dict):
+        # TODO need handling for dict keys unequal
+        self.sites_dict = sites_dict
+        self.most_recent_dict = most_recent_dict
+
+    def set_most_recent(self, updates_dict):
+        for site, updates in updates_dict.iteritems():
+            if len(updates) > 0:
+                self.most_recent_dict[site] = updates[0]
 
     def check_and_push(self):
-        # check : check
-        # mutate : pending
-        # push : check
-        pass
-
-
-
+        updates_dict = check_updates(self.sites_dict, self.most_recent_dict)
+        push_updates(updates_dict)
+        self.set_most_recent(updates_dict)
 
