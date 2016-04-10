@@ -36,7 +36,7 @@ def test_get_most_recent_update_link():
 
 
 @mock.patch("terminal_notify.get_and_parse")
-def test_check_for_new_update(get_and_parse_mock):
+def test_check_for_update_single(get_and_parse_mock):
     # --- it returns empty list on no update
     m = mock.Mock()
     # return value should be parsed example url TODO
@@ -45,7 +45,7 @@ def test_check_for_new_update(get_and_parse_mock):
             {"link": "bar"}
         ]
     }
-    result = terminal_notify.check_for_new_update("foo", "bar")
+    result = terminal_notify.check_for_update_single("foo", "bar")
     truth = []
     nt.assert_equal(result, truth)
 
@@ -57,8 +57,19 @@ def test_check_for_new_update(get_and_parse_mock):
             {"link": "bar"}
         ]
     }
-    result = terminal_notify.check_for_new_update("foo", "bar")
+    result = terminal_notify.check_for_update_single("foo", "bar")
     truth = ["ar", "aar"]
+    nt.assert_equal(result, truth)
+
+
+@mock.patch("terminal_notify.check_for_update_single")
+def test_check_for_updates(check_mock):
+    sites_dict = {"xkcd": "xkcd.com/feed"}
+    most_recent_dict = {"xkcd": "xkcd.com/1"}
+    check_mock.return_value = ["xkcd.com/2"]
+    result = terminal_notify.check_for_updates(sites_dict, most_recent_dict)
+    check_mock.assert_called_with("xkcd.com/feed", "xkcd.com/1")
+    truth = {"xkcd": ["xkcd.com/2"]}
     nt.assert_equal(result, truth)
 
 
@@ -71,31 +82,31 @@ def test_push_update_single(pync_mock):
 
 
 @mock.patch("terminal_notify.push_update_single")
-def test_push_updates(update_mock):
+def test_push_updates(push_mock):
     update_dict = {"xkcd": ["xkcd.com/1"],
                    "SMBC": ["smbc.com/2", "smbc.com/1"],
                    "Dominic Deegan": []}  # :(
     terminal_notify.push_updates(update_dict)
 
     # test that it doesn't push update for []
-    nt.assert_equal(len(update_mock.call_args_list), 2)
+    nt.assert_equal(len(push_mock.call_args_list), 2)
 
     # test both orders because unordered dict
-    if "xkcd" in update_mock.call_args_list[0][0][0]:
-        nt.assert_equal(update_mock.call_args_list[0][0],
+    if "xkcd" in push_mock.call_args_list[0][0][0]:
+        nt.assert_equal(push_mock.call_args_list[0][0],
                         ("xkcd updated!", "xkcd.com/1"))
-        nt.assert_equal(update_mock.call_args_list[1][0],
+        nt.assert_equal(push_mock.call_args_list[1][0],
                         ("SMBC has 2 new updates!", "smbc.com/2"))
 
-    elif "SMBC" in update_mock.call_args_list[0][0][0]:
-        nt.assert_equal(update_mock.call_args_list[0][0],
+    elif "SMBC" in push_mock.call_args_list[0][0][0]:
+        nt.assert_equal(push_mock.call_args_list[0][0],
                         ("SMBC has 2 new updates!", "smbc.com/2"))
-        nt.assert_equal(update_mock.call_args_list[1][0],
+        nt.assert_equal(push_mock.call_args_list[1][0],
                         ("xkcd updated!", "xkcd.com/1"))
 
     else:
         raise AssertionError("first call not recognized: " +
-                             str(update_mock.call_args_list[0][0]))
+                             str(push_mock.call_args_list[0][0]))
 
 def test_Feed_init():
     feed = terminal_notify.Feed({"Foo": "bar.com", "xkcd": "xkcd.com"},
