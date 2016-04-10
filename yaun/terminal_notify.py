@@ -5,8 +5,9 @@ JP Addison
 """
 import feedparser
 import pync
+import time
 
-SITES = {"Mike Luckovich": "http://luckovich.blog.ajc.com/"}
+SITES = {"Mike Luckovich": "http://luckovich.blog.ajc.com/feed/"}
 
 
 def get_and_parse(url):
@@ -73,6 +74,7 @@ def push_updates(site_update_dict):
         if len(updates) == 1:
             message = site + " updated!"
         else:
+            # TODO: should redirect to feed instead of post on >1
             message = "%s has %d new updates!" % (site, len(updates))
         push_update_single(message, updates[0])  # url of most recent
 
@@ -105,3 +107,14 @@ class Feed(object):
         updates_dict = check_updates(self.sites_dict, self.most_recent_dict)
         push_updates(updates_dict)
         self._set_most_recent(updates_dict)
+
+
+if __name__ == "__main__":
+    most_recent = {"Mike Luckovich": "None"}
+    feed = Feed(SITES, most_recent)
+
+    minutes_between = 10
+    while True:
+        print "checking for updates!"
+        feed.check_and_push()
+        time.sleep(minutes_between * 60)
