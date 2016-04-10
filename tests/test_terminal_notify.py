@@ -114,7 +114,7 @@ def test_set_most_recent():
     feed = terminal_notify.Feed({"Foo": "bar.com", "xkcd": "xkcd.com/feed"},
                                 {"Foo": "bar.com/1", "xkcd": "xkcd.com/2"})
     updates_dict = {"Foo": [], "xkcd": ["xkcd.com/3"]}
-    feed.set_most_recent(updates_dict)
+    feed._set_most_recent(updates_dict)
     truth = {"Foo": "bar.com/1", "xkcd": "xkcd.com/3"}
     nt.assert_equal(feed.most_recent_dict, truth)
 

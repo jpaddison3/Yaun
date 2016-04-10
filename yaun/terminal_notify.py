@@ -1,3 +1,8 @@
+"""
+Get terminal notifications for updated websites
+
+JP Addison
+"""
 import feedparser
 import pync
 
@@ -73,18 +78,30 @@ def push_updates(site_update_dict):
 
 
 class Feed(object):
+    """
+    Keeps track of feed state
+    """
     def __init__(self, sites_dict, most_recent_dict):
+        """
+        sites_dict, site names: feed urls
+        most_recent_dict, site names: most recent link urls
+        """
         # TODO need handling for dict keys unequal
         self.sites_dict = sites_dict
         self.most_recent_dict = most_recent_dict
 
-    def set_most_recent(self, updates_dict):
+    def _set_most_recent(self, updates_dict):
+        """
+        Update most recent urls
+        """
         for site, updates in updates_dict.iteritems():
             if len(updates) > 0:
                 self.most_recent_dict[site] = updates[0]
 
     def check_and_push(self):
+        """
+        Checks for and notifies user of updates
+        """
         updates_dict = check_updates(self.sites_dict, self.most_recent_dict)
         push_updates(updates_dict)
-        self.set_most_recent(updates_dict)
-
+        self._set_most_recent(updates_dict)
