@@ -110,7 +110,7 @@ class Feed(object):
 
 
 if __name__ == "__main__":
-    most_recent = {"Mike Luckovich": "None"}
+    most_recent = {SITES.keys()[0]: "None"}
     feed = Feed(SITES, most_recent)
 
     minutes_between = 10
