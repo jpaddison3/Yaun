@@ -1,0 +1,84 @@
+body {
+    height: 100%;
+
+}
+h2 {
+
+}
+h3 {
+    margin: 0;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+.sidebar {
+    float: left;
+    width: 300px;
+    max-height: 100vh;
+    overflow-y: hidden;
+
+}
+nav {
+    padding: 1rem;
+}
+.sourcecontainer {
+    position: relative;
+}
+.sourcecontainer h2 {
+
+}
+.sourceheader {
+    padding-left: 1rem;
+
+
+}
+.sources {
+    max-height: calc(100% - 48px);
+    overflow-y: scroll;
+
+}
+.sources li {
+    margin: 0;
+    padding: 1rem;
+    padding-left: calc(1rem - 4px);
+    cursor: pointer;
+    /*border-bottom: 1px solid #ccc;*/
+    margin-left: 4px;
+    opacity: .7;
+
+}
+.sources li:not(.active):hover {
+    border-left: solid 4px #ccc;
+    margin-left: 0;
+    opacity: .9;
+}
+.sources li.active {
+    border-left: solid 4px #44f;
+    margin-left: 0;
+    opacity: 1;
+}
+.addSourcesContainer {
+    position: fixed;
+    bottom: 0;
+    padding: 1rem;
+    background: #eee;
+    width: calc(300px - 2rem);
+}
+
+.linkscontainer {
+    /*margin-left: 300px;*/
+    float: left;
+    height: 100vw;
+    overflow-y: scroll;
+    box-sizing: border-box;
+    width: calc(100vw - 300px);
+    border-left: 1px solid #ccc;
+    padding: 1rem 2rem;
+    max-height: 100vh;
+
+}
+.links li {
+    margin-bottom: 4rem;
+}

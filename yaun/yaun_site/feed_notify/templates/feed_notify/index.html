@@ -1,10 +1,104 @@
-{% if updates %}
-    <p>Blog Updates!</p>
-    <ul>
-    {% for update in updates %}
-        <li><a href="{{ update }}">{{ update }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No updates found</p>
-{% endif %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>YAUN</title>
+        <link rel="stylesheet" href="{% static 'feed_notify/normalize.css' %}" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="{% static 'feed_notify/default.css' %}" media="screen" title="no title" charset="utf-8">
+    </head>
+    <body>
+        <div class="sidebar">
+            <nav>
+                <h1>YAUN</h1>
+                <a href="#">XX</a>
+            </nav>
+            <div class="sourcecontainer">
+                <div class="sourceheader">
+                    <h2>Sources</h2>
+                </div>
+
+                <ul class="sources">
+                    <li>
+                        <h3>Source Name</h3>
+                        <a href="#">Source URL</a>
+                    </li>
+                    <li>
+                        <h3>Source Name</h3>
+                        <a href="#">Source URL</a>
+                    </li>
+                    <li>
+                        <h3>Source Name</h3>
+                        <a href="#">Source URL</a>
+                    </li>
+                    <li>
+                        <h3>Source Name</h3>
+                        <a href="#">Source URL</a>
+                    </li><li>
+                        <h3>Source Name</h3>
+                        <a href="#">Source URL</a>
+                    </li><li>
+                        <h3>Source Name</h3>
+                        <a href="#">Source URL</a>
+                    </li><li>
+                        <h3>Source Name</h3>
+                        <a href="#">Source URL</a>
+                    </li><li>
+                        <h3>Source Name</h3>
+                        <a href="#">Source URL</a>
+                    </li><li>
+                        <h3>Source Name</h3>
+                        <a href="#">Source URL</a>
+                    </li><li>
+                        <h3>Source Name</h3>
+                        <a href="#">Source URL</a>
+                    </li><li>
+                        <h3>Source Name</h3>
+                        <a href="#">Source URL</a>
+                    </li><li>
+                        <h3>Source Name</h3>
+                        <a href="#">Source URL</a>
+                    </li><li>
+                        <h3>Source Name</h3>
+                        <a href="#">Source URL</a>
+                    </li>
+                </ul>
+                <div class="addSourcesContainer">
+                    <form class="" method="">
+                        <label for="rssurl">Add source</label><br>
+                        <input name="rssurl" type="text">
+                        <button type="submit">&#43;</button>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="linkscontainer">
+            <h2>Links</h2>
+            {% if updates %}
+                <ul class="links">
+                {% for update in updates %}
+                    <li>
+                        <h4>Story Title</h4>
+                        <a href="{{ update }}">{{ update }}</a>
+                        <p>Sed sodales vehicula commodo. Phasellus maximus tincidunt enim, at auctor turpis laoreet at. Mauris in rhoncus diam. Curabitur at arcu vel diam facilisis placerat eget id quam. In felis quam, efficitur non libero a, mattis dictum purus. Cras non eros sit amet mi luctus fermentum. Nunc tempor, justo id consectetur finibus, urna tortor maximus risus, non malesuada diam elit nec odio. Donec efficitur nibh eu elementum auctor. Proin blandit laoreet orci id ornare. In pulvinar ligula nisl, ac vulputate lorem suscipit quis. Curabitur id augue sagittis metus tincidunt lacinia quis fringilla neque. Pellentesque ac diam dignissim, feugiat sapien vitae, pretium risus. Etiam quis cursus augue, venenatis pharetra lorem.</p>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <span>No updates found</span>
+            {% endif %}
+        </div>
+        <script src="https://code.jquery.com/jquery-1.12.3.min.js"   integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
+        <script type="text/JavaScript">
+            $(function() {
+                $(".sources li").first().addClass("active");
+                $(".sources li").click(function(){
+                    $(".sources li").removeClass("active");
+                    $(this).addClass("active");
+                });
+
+            });
+        </script>
+    </body>
+</html>
