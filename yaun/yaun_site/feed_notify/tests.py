@@ -8,7 +8,7 @@ from . import models
 
 class FeedTests(TestCase):
 
-    @mock.patch("yaun_app.models.check_update_single")
+    @mock.patch("feed_notify.models.check_update_single")
     def test_check_update_positive(self, update_mock):
         mock_return = ["example.com/1"]
         update_mock.return_value = copy.copy(mock_return)

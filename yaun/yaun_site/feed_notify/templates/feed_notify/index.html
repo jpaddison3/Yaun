@@ -1,0 +1,10 @@
+{% if updates %}
+    <p>Blog Updates!</p>
+    <ul>
+    {% for update in updates %}
+        <li><a href="{{ update }}">{{ update }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No updates found</p>
+{% endif %}
