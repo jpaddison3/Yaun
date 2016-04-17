@@ -2,7 +2,9 @@
     <p>Blog Updates!</p>
     <ul>
     {% for update in updates %}
-        <li><a href="{{ update }}">{{ update }}</a></li>
+        <h1>{{update.title}}</h1>
+        <li><a href="{{ update.link }}">{{ update.link }}</a></li>
+        {{ update.summary|safe }}
     {% endfor %}
     </ul>
 {% else %}
