@@ -1,14 +1,7 @@
 *.pyc
-yaun/yaun_site/yaun_site/settings.py
 
 yaun/yaun_site/db.sqlite3
 
 yaun/yaun_site/feed_notify/migrations/0001_initial.py
 
 yaun/yaun_site/yaun_site/secret_key.txt
-
-yaun/yaun_site/yaun_site/settings.py
-
-yaun/yaun_site/yaun_site/settings.py
-
-yaun/yaun_site/yaun_site/settings.py
